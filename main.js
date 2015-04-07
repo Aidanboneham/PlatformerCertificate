@@ -1,6 +1,7 @@
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
 
+//setting up delta time variables
 var startFrameMillis = Date.now();
 var endFrameMillis = Date.now();
 
