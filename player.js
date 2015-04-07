@@ -24,11 +24,11 @@ Player.prototype.update = function(deltaTime)
 {
 	if ( keyboard.isKeyDown(keyboard.KEY_SPACE) )
 	{
-		this.rotation += deltaTime;
+		this.rotation += deltaTime * 2;
 	}
 	else
 	{
-		this.rotation -= deltaTime;
+		this.rotation -= deltaTime * 2;
 	}
 }
 
