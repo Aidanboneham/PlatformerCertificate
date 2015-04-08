@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="15" tilewidth="35" tileheight="35" nextobjectid="1">
+ <tileset firstgid="1" name="Platforms" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="tileset.png" width="1024" height="1024"/>
+ </tileset>
+ <layer name="Background" width="60" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzt0aERAEAQg8DrX3zNXwWDCGviw92WN7Zr7L/ry7L/ri/L/ru+LPvv+rLsv+vLsv+uL+sDF/t0fQ==
+  </data>
+ </layer>
+ <layer name="Platforms" width="60" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDGegDaV1SKR1qWC3DZS2o4JZwxGsGmgHIAFYXNnioEfjEDfwgtLoech7ANwyCkYBOhjN29QFiwfaAQMMBrJNQQnwgdKE3OkLpVeMMBoA3FEc0A==
+  </data>
+ </layer>
+ <layer name="Ladders" width="60" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDEeweaAdMApoCjZRyZzRdDI4AbXil1rmjALqgtH4Hd5gNH5HATFgMMUvAIH7Bvc=
+  </data>
+ </layer>
+</map>

@@ -21,8 +21,8 @@ Vector2.prototype.subtract = function( other_vector )
 {
 	var result = new Vector2();
 	
-	result.x = this.x + other_vector.x;
-	result.y = this.y + other_vector.y;
+	result.x = this.x - other_vector.x;
+	result.y = this.y - other_vector.y;
 	
 	return result;
 }
