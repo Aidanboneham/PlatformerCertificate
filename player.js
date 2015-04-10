@@ -35,11 +35,15 @@ var Player = function()
 								-this.width/2, -this.height/2);
 	}
 
+	this.startPos = new Vector2();
+	this.startPos.set(600, 250);
+
 	this.position = new Vector2();
-	this.position.set(canvas.width / 2, canvas.height/2);
+	this.position.set(this.startPos.x, this.startPos.y);
 	
 	this.velocity = new Vector2();
 	
+	this.deathCount = 0;
 	
 	this.jumping = false;
 	this.falling = false;
@@ -48,6 +52,11 @@ var Player = function()
 	
 	this.angularVelocity = 0;
 	this.rotation = 0;
+
+
+	this.health = 5;
+	this.heartImage = document.createElement("img");
+	this.heartImage.src = "heart.png";
 
 };
 
@@ -144,10 +153,6 @@ Player.prototype.update = function(deltaTime)
 		}
 	}
 
-
-
-
-
 	var collisionOffset = new Vector2();
 	collisionOffset.set(-8, this.height/2 - TILE);
 	
@@ -155,10 +160,6 @@ Player.prototype.update = function(deltaTime)
 	
 	var tx = pixelToTile(collisionPos .x);
 	var ty = pixelToTile(collisionPos .y);
-		
-	context.beginPath();
-	context.rect(collisionPos .x, collisionPos .y, TILE, TILE);
-	context.stroke();
 	
 	var nx = this.position.x % TILE;
 	var ny = this.position.y % TILE;
@@ -167,7 +168,7 @@ Player.prototype.update = function(deltaTime)
 	var cell_right = cellAtTileCoord(LAYER_PLATFORMS, tx+1, ty);
 	var cell_down = cellAtTileCoord(LAYER_PLATFORMS, tx, ty+1);
 	var cell_diag = cellAtTileCoord(LAYER_PLATFORMS, tx+1, ty+1);
-	
+
 	//ACTUAL COLLISION!
 	if ( this.velocity.y > 0 ) //if moving down
 	{
@@ -175,8 +176,7 @@ Player.prototype.update = function(deltaTime)
 		{
 			this.position.y = tileToPixel(ty) - collisionOffset.y;
 			this.velocity.y = 0;
-			ny = 0;
-			
+			ny = 0;			
 			this.jumping = false;
 		}
 	}
@@ -213,9 +213,24 @@ Player.prototype.update = function(deltaTime)
 			this.velocity.x = 0;
 		}
 	}
+
+	if ( this.position.y > MAP.th * TILE + this.height)
+	{
+		this.position.set(this.startPos.x, this.startPos.y);
+		this.velocity.set(0,0);
+		this.health = 5;
+		timer = 0;
+	}
 }
 
-Player.prototype.draw = function()
+
+Player.prototype.draw = function(offsetX, offsetY)
 {
-	this.sprite.draw(context, this.position.x, this.position.y);
+	this.sprite.draw(context, this.position.x - offsetX, this.position.y - offsetY);
+
+
+	for ( var h = 0 ; h < this.health ; ++h)
+	{
+		context.drawImage(this.heartImage, 10 + 30*h, 10, 25, 25);
+	}
 }

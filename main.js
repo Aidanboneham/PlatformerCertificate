@@ -153,7 +153,7 @@ function cellAtPixelCoord(layer, x, y)
 }
 
 
-function drawMap(cam_offset)
+function drawMap(offsetX, offsetY)
 {
 	if (typeof(level1) === "undefined" )
 	{
@@ -189,10 +189,11 @@ function drawMap(cam_offset)
 					//source y in the tileset
 					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * 
 												(TILESET_TILE + TILESET_SPACING);
+					
 					//destination x on the canvas
-					var dx = x * TILE - cam_offset.x;
+					var dx = x * TILE - offsetX;
 					//destination y on the canvas
-					var dy = (y-1) * TILE - cam_offset.y;
+					var dy = (y-1) * TILE - offsetY;
 					
 					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, 
 											   dx, dy, TILESET_TILE, TILESET_TILE);
@@ -205,6 +206,29 @@ function drawMap(cam_offset)
 
 var keyboard = new Keyboard();
 var player = new Player();
+var enemy = new Enemy();
+
+var timer = 0;
+
+var deathSkull = document.createElement("img");
+deathSkull.src = "skull.png";
+
+
+//DOWNLOAD THE background.ogg FILE FROM PORTAL
+//DOWNLIAD THE howler.hs FILE FROM PORTAL
+//PUT BOTH FILES IN YOUR GAME FOLDER
+//ADD THIS CODE ABOVE RUN FUNCTION 
+var bgMusic = new Howl(
+	{
+		urls:["background.ogg"],
+		loop:true,
+		buffer:true,
+		volume:0.5
+	});
+
+bgMusic.play();
+
+
 
 function run()
 {
@@ -213,16 +237,81 @@ function run()
 	
 	var deltaTime = getDeltaTime();
 	
+
+	//ADDED THIS
+	timer += deltaTime;
+
 	if ( deltaTime > 0.03 )
 	{
 		deltaTime = 0.03;
 	}
 	
-	drawMap({x:0, y:0});
-	player.update(deltaTime);
-	player.draw();
+	var xScroll = player.position.x - player.startPos.x;
+	var yScroll = 0;
+
+	if ( xScroll < 0 )
+		xScroll = 0;
+	if ( xScroll > MAP.tw * TILE - canvas.width)
+		xScroll = MAP.tw * TILE - canvas.width;
+
+	if ( yScroll < 0 )
+		yScroll = 0;
+	if ( yScroll > MAP.th * TILE - canvas.height)
+		yScroll = MAP.th * TILE - canvas.height;
+
+	drawMap(xScroll, yScroll);
+
+	enemy.update(deltaTime);
+	enemy.draw(xScroll,yScroll);
+
+	if ( player.health > 0 )
+	{
+		player.update(deltaTime);
+		player.draw(xScroll,yScroll);
+	}
+	else
+	{
+		player.deathCount += 170;
+		var skullPos = new Vector2();
+		skullPos.set(0, 0);
+
+		for ( var skull = 0 ; skull < player.deathCount ; ++skull)
+		{
+			context.drawImage(deathSkull, skullPos.x, skullPos.y, 32, 32);
+			skullPos.x += 40;
+
+			if ( skullPos.x >= canvas.width)
+			{
+				skullPos.x -= canvas.width;
+				skullPos.y += 40;
+				if ( skullPos.y > canvas.height )
+				{
+					skullPos.y -= (canvas.height);
+					skullPos.x += (10);
+				}
+			}
+
+		}
+	}
+
+
+
+
+	//ADDED THESE
+	context.fillStyle = "black";
+	context.font = "32px Arial";
+	var timerSeconds = Math.floor(timer);
+	var timerMilliseconds = Math.floor((timer - timerSeconds) * 1000);
+	var textToDisplay = "Level Timer: " + timerSeconds + ":" + timerMilliseconds;
+	context.fillText(textToDisplay, canvas.width - 325, 50);
+
+	if ( player.health <= 0 )
+	{
+		//player.position.set(350, 50);
+		//player.health = 100;
+	}
+
 	
-		
 	// update the frame counter 
 	fpsTime += deltaTime;
 	fpsCount++;
